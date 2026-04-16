@@ -31,6 +31,10 @@ export default function HomeScreen({ navigation }: any) {
       <Text>Ir a Perfil</Text>
     </TouchableOpacity>
 
+    <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+      <Text>Ir al Chat</Text>
+    </TouchableOpacity>
+
       <FlatList
         data={pets}
         keyExtractor={(item) => item.id}

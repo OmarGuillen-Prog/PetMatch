@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import DetailScreen from '../screens/DetailScreen';
 import PublishScreen from '../screens/PublishScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ChatScreen from '../screens/ChatScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +50,12 @@ export default function AppNavigator() {
           name="Profile" 
           component={ProfileScreen} 
           options={{ title: 'Perfil 👤' }}
+        />
+
+        <Stack.Screen 
+          name="Chat" 
+          component={ChatScreen} 
+          options={{ title: 'Chat 💬' }}
         />
 
       </Stack.Navigator>
