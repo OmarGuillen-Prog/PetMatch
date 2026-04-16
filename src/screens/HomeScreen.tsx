@@ -1,13 +1,43 @@
-import { View, Text, Button } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
+import PetCard from '../components/PetCard';
+import { homeStyles as styles } from '../styles/homeStyles';
 
-export default function HomeScreen({ navigation }: any) {
+const pets = [
+  {
+    id: '1',
+    nombre: 'Luna',
+    estado: 'Disponible',
+    imagen: 'https://placedog.net/400/300?id=1',
+  },
+  {
+    id: '2',
+    nombre: 'Max',
+    estado: 'Disponible',
+    imagen: 'https://placedog.net/400/300?id=2',
+  },
+  {
+    id: '3',
+    nombre: 'Rocky',
+    estado: 'Adoptado',
+    imagen: 'https://placedog.net/400/300?id=3',
+  },
+];
+
+export default function HomeScreen() {
   return (
-    <View>
-      <Text>Home Screen 🐾</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>🐾 Mascotas disponibles</Text>
 
-      <Button
-        title="Cerrar sesión"
-        onPress={() => navigation.navigate('Login')}
+      <FlatList
+        data={pets}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <PetCard
+            nombre={item.nombre}
+            estado={item.estado}
+            imagen={item.imagen}
+          />
+        )}
       />
     </View>
   );
