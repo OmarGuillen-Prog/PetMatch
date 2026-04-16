@@ -1,6 +1,7 @@
 import { View, Text, FlatList } from 'react-native';
 import PetCard from '../components/PetCard';
 import { homeStyles as styles } from '../styles/homeStyles';
+import { TouchableOpacity } from 'react-native';
 
 const pets = [
   {
@@ -22,6 +23,10 @@ export default function HomeScreen({ navigation }: any) {
     <View style={styles.container}>
       <Text style={styles.title}>🐾 Mascotas disponibles</Text>
 
+    <TouchableOpacity onPress={() => navigation.navigate('Publish')}>
+      <Text>+ Publicar mascota</Text>
+    </TouchableOpacity>
+    
       <FlatList
         data={pets}
         keyExtractor={(item) => item.id}
@@ -32,8 +37,10 @@ export default function HomeScreen({ navigation }: any) {
             imagen={item.imagen}
             onPress={() =>
               navigation.navigate('Detail', { mascota: item })
+              
             }
           />
+          
         )}
       />
     </View>

@@ -1,22 +1,27 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { detailStyles as styles } from '../styles/detailStyles';
 
 export default function DetailScreen({ route }: any) {
   const { mascota } = route.params;
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
+    <View style={styles.container}>
+      
       <Image 
         source={{ uri: mascota.imagen }} 
-        style={{ width: '100%', height: 250, borderRadius: 10 }}
+        style={styles.image}
       />
 
-      <Text style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10 }}>
-        {mascota.nombre}
-      </Text>
+      <Text style={styles.name}>{mascota.nombre}</Text>
 
-      <Text style={{ color: '#666', marginTop: 5 }}>
+      <Text style={styles.status}>
         Estado: {mascota.estado}
       </Text>
+
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Solicitar adopción</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
