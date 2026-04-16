@@ -1,14 +1,37 @@
-import { View, Text, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { registerStyles as styles } from '../styles/registerStyles';
 
 export default function RegisterScreen({ navigation }: any) {
   return (
-    <View>
-      <Text>Register Screen</Text>
+    <View style={styles.container}>
 
-      <Button
-        title="Volver a Login"
-        onPress={() => navigation.navigate('Login')}
+      <Text style={styles.title}>🐾 PetMatch</Text>
+      <Text style={styles.subtitle}>Crear cuenta</Text>
+
+      <TextInput
+        placeholder="Nombre"
+        style={styles.input}
       />
+
+      <TextInput
+        placeholder="Correo electrónico"
+        style={styles.input}
+      />
+
+      <TextInput
+        placeholder="Contraseña"
+        secureTextEntry
+        style={styles.input}
+      />
+
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Registrarse</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.link}>¿Ya tienes cuenta? Inicia sesión</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
