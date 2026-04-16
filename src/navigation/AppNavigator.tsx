@@ -1,21 +1,24 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+// Auth
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import HomeScreen from '../screens/HomeScreen';
+
+// Tabs
+import TabNavigator from './TabNavigator';
+
+// Extra
 import DetailScreen from '../screens/DetailScreen';
-import PublishScreen from '../screens/PublishScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import ChatScreen from '../screens/ChatScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        
+      <Stack.Navigator>
+
+        {/* 🔐 Auth */}
         <Stack.Screen 
           name="Login" 
           component={LoginScreen} 
@@ -25,37 +28,19 @@ export default function AppNavigator() {
         <Stack.Screen 
           name="Register" 
           component={RegisterScreen} 
-          options={{ title: 'Registro' }}
         />
 
+        {/* 🔥 App principal */}
         <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
-          options={{ title: 'PetMatch 🐾' }}
+          name="Main" 
+          component={TabNavigator} 
+          options={{ headerShown: false }}
         />
 
+        {/* 🔍 Detalle */}
         <Stack.Screen 
           name="Detail" 
           component={DetailScreen} 
-          options={{ title: 'Detalle 🐶' }}
-        />
-
-        <Stack.Screen 
-          name="Publish" 
-          component={PublishScreen} 
-          options={{ title: 'Publicar 🐾' }}
-        />
-
-        <Stack.Screen 
-          name="Profile" 
-          component={ProfileScreen} 
-          options={{ title: 'Perfil 👤' }}
-        />
-
-        <Stack.Screen 
-          name="Chat" 
-          component={ChatScreen} 
-          options={{ title: 'Chat 💬' }}
         />
 
       </Stack.Navigator>

@@ -23,18 +23,6 @@ export default function HomeScreen({ navigation }: any) {
     <View style={styles.container}>
       <Text style={styles.title}>🐾 Mascotas disponibles</Text>
 
-    <TouchableOpacity onPress={() => navigation.navigate('Publish')}>
-      <Text>+ Publicar mascota</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-      <Text>Ir a Perfil</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-      <Text>Ir al Chat</Text>
-    </TouchableOpacity>
-
       <FlatList
         data={pets}
         keyExtractor={(item) => item.id}
