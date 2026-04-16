@@ -26,7 +26,11 @@ export default function HomeScreen({ navigation }: any) {
     <TouchableOpacity onPress={() => navigation.navigate('Publish')}>
       <Text>+ Publicar mascota</Text>
     </TouchableOpacity>
-    
+
+    <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+      <Text>Ir a Perfil</Text>
+    </TouchableOpacity>
+
       <FlatList
         data={pets}
         keyExtractor={(item) => item.id}

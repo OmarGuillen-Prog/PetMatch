@@ -6,6 +6,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
 import DetailScreen from '../screens/DetailScreen';
 import PublishScreen from '../screens/PublishScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +43,12 @@ export default function AppNavigator() {
           name="Publish" 
           component={PublishScreen} 
           options={{ title: 'Publicar 🐾' }}
+        />
+
+        <Stack.Screen 
+          name="Profile" 
+          component={ProfileScreen} 
+          options={{ title: 'Perfil 👤' }}
         />
 
       </Stack.Navigator>
