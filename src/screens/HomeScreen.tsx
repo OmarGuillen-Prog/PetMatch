@@ -15,15 +15,9 @@ const pets = [
     estado: 'Disponible',
     imagen: 'https://placedog.net/400/300?id=2',
   },
-  {
-    id: '3',
-    nombre: 'Rocky',
-    estado: 'Adoptado',
-    imagen: 'https://placedog.net/400/300?id=3',
-  },
 ];
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🐾 Mascotas disponibles</Text>
@@ -36,6 +30,9 @@ export default function HomeScreen() {
             nombre={item.nombre}
             estado={item.estado}
             imagen={item.imagen}
+            onPress={() =>
+              navigation.navigate('Detail', { mascota: item })
+            }
           />
         )}
       />
