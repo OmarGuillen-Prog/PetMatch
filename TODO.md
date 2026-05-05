@@ -1,10 +1,23 @@
-# PetMatch Reusable Hooks TODO
+# PetMatch Reusable Hooks & Auth Context TODO - COMPLETADO ✅
 
-## Plan Steps:
-- [x] Create src/hooks/useAuth.ts (Context + login/register/logout) ✅
-- [x] Create src/hooks/useFetch.ts (generic API fetcher) ✅
-- [x] Create src/hooks/usePets.ts (pets data) ✅
-- [x] Create src/hooks/index.ts (exports) ✅
-- [x] Update App.tsx with AuthProvider ✅
-- [x] Fix tsconfig.json for JSX ✅
-- [ ] Migrate HomeScreen.tsx to usePets (optional)
+## Hooks creados:
+- `src/hooks/useAuth.ts`: Context + login/register/logout + token persistence
+- `src/hooks/useFetch.ts`: Generic fetcher
+- `src/hooks/usePets.ts`: Pets data
+- `src/hooks/index.ts`: Exports
+
+## Context:
+- `src/context/AuthContext.tsx`: Re-export de useAuth para compatibilidad
+
+**Estado:**
+- App.tsx: `<AuthProvider>` activo
+- tsconfig.json: JSX configurado
+- AsyncStorage instalado
+
+**Uso:**
+```tsx
+import { useAuth } from '../hooks/useAuth'; // o '../context/AuthContext'
+const { login, user } = useAuth();
+```
+
+¡Todo listo para screens de auth!

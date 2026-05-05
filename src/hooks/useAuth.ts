@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login as loginService, register as registerService, logout as logoutService } from '../services/authService';
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
