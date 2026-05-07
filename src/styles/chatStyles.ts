@@ -14,7 +14,7 @@ export const chatStyles = StyleSheet.create({
     maxWidth: '70%',
   },
   myMessage: {
-    backgroundColor: colors.secondary, // 🟢
+    backgroundColor: colors.secondary,
     alignSelf: 'flex-end',
   },
   otherMessage: {

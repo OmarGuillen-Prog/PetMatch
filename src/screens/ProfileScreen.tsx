@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen({ navigation }: any) {
   
-  // 🔥 Datos simulados (luego vendrán del backend)
+  //  Datos simulados (luego vendrán del backend)
   const user = {
     nombre: 'Omar',
     email: 'omar@email.com',
