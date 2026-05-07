@@ -1,6 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { useState } from 'react';
 import { chatStyles as styles } from '../styles/chatStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ChatScreen() {
 
@@ -25,38 +26,40 @@ export default function ChatScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
 
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View
-            style={[
-              styles.messageContainer,
-              item.sender === 'me'
-                ? styles.myMessage
-                : styles.otherMessage,
-            ]}
-          >
-            <Text style={styles.text}>{item.text}</Text>
-          </View>
-        )}
-      />
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Escribe un mensaje..."
-          value={message}
-          onChangeText={setMessage}
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                styles.messageContainer,
+                item.sender === 'me'
+                  ? styles.myMessage
+                  : styles.otherMessage,
+              ]}
+            >
+              <Text style={styles.text}>{item.text}</Text>
+            </View>
+          )}
         />
 
-        <TouchableOpacity style={styles.button} onPress={sendMessage}>
-          <Text style={styles.buttonText}>Enviar</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Escribe un mensaje..."
+            value={message}
+            onChangeText={setMessage}
+          />
 
-    </View>
+          <TouchableOpacity style={styles.button} onPress={sendMessage}>
+            <Text style={styles.buttonText}>Enviar</Text>
+          </TouchableOpacity>
+        </View>
+
+      </View>
+    </SafeAreaView>
   );
 }

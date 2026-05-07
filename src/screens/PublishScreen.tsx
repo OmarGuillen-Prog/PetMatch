@@ -1,6 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useState } from 'react';
 import { publishStyles as styles } from '../styles/publishStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PublishScreen({ navigation }: any) {
 
@@ -32,50 +33,52 @@ export default function PublishScreen({ navigation }: any) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
 
-      <Text style={styles.title}>🐾 Publicar Mascota</Text>
+        <Text style={styles.title}>🐾 Publicar Mascota</Text>
 
-      <TextInput
-        placeholder="Nombre"
-        style={styles.input}
-        value={nombre}
-        onChangeText={setNombre}
-      />
+        <TextInput
+          placeholder="Nombre"
+          style={styles.input}
+          value={nombre}
+          onChangeText={setNombre}
+        />
 
-      <TextInput
-        placeholder="Tipo (Perro, Gato...)"
-        style={styles.input}
-        value={tipo}
-        onChangeText={setTipo}
-      />
+        <TextInput
+          placeholder="Tipo (Perro, Gato...)"
+          style={styles.input}
+          value={tipo}
+          onChangeText={setTipo}
+        />
 
-      <TextInput
-        placeholder="Edad"
-        style={styles.input}
-        value={edad}
-        onChangeText={setEdad}
-      />
+        <TextInput
+          placeholder="Edad"
+          style={styles.input}
+          value={edad}
+          onChangeText={setEdad}
+        />
 
-      <TextInput
-        placeholder="Descripción"
-        style={styles.textarea}
-        multiline
-        value={descripcion}
-        onChangeText={setDescripcion}
-      />
+        <TextInput
+          placeholder="Descripción"
+          style={styles.textarea}
+          multiline
+          value={descripcion}
+          onChangeText={setDescripcion}
+        />
 
-      <TextInput
-        placeholder="URL de imagen"
-        style={styles.input}
-        value={imagen}
-        onChangeText={setImagen}
-      />
+        <TextInput
+          placeholder="URL de imagen"
+          style={styles.input}
+          value={imagen}
+          onChangeText={setImagen}
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handlePublish}>
-        <Text style={styles.buttonText}>Publicar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handlePublish}>
+          <Text style={styles.buttonText}>Publicar</Text>
+        </TouchableOpacity>
 
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }

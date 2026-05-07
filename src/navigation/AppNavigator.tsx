@@ -18,7 +18,7 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator>
 
-        {/* 🔐 Auth */}
+        {/* Auth */}
         <Stack.Screen 
           name="Login" 
           component={LoginScreen} 
@@ -30,14 +30,14 @@ export default function AppNavigator() {
           component={RegisterScreen} 
         />
 
-        {/* 🔥 App principal */}
+        {/* App principal */}
         <Stack.Screen 
           name="Main" 
           component={TabNavigator} 
           options={{ headerShown: false }}
         />
 
-        {/* 🔍 Detalle */}
+        {/* Detalle */}
         <Stack.Screen 
           name="Detail" 
           component={DetailScreen} 
