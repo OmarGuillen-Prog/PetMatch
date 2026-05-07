@@ -1,24 +1,26 @@
 import { StyleSheet } from 'react-native';
+import { colors } from './colors';
 
 export const publishStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.background,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 15,
+    color: colors.text,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     padding: 12,
     borderRadius: 10,
     marginBottom: 10,
   },
   textarea: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     padding: 12,
     borderRadius: 10,
     marginBottom: 10,
@@ -26,14 +28,13 @@ export const publishStyles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#4ecdc4',
+    backgroundColor: colors.primary,
     padding: 15,
     borderRadius: 10,
-    marginTop: 10,
   },
   buttonText: {
     textAlign: 'center',
-    color: '#fff',
+    color: colors.white,
     fontWeight: 'bold',
   },
 });

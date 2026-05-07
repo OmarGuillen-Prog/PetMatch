@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native';
+import { colors } from './colors';
 
 export const petCardStyles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     borderRadius: 15,
     marginBottom: 15,
     overflow: 'hidden',
@@ -18,8 +19,9 @@ export const petCardStyles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: colors.text,
   },
   status: {
-    color: '#666',
+    color: colors.gray,
   },
 });

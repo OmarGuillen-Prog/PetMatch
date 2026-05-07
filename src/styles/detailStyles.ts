@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { colors } from './colors';
 
 export const detailStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.background,
   },
   image: {
     width: '100%',
@@ -15,21 +16,22 @@ export const detailStyles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     marginTop: 15,
+    color: colors.text,
   },
   status: {
     fontSize: 16,
-    color: '#666',
+    color: colors.gray,
     marginTop: 5,
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#ff6b6b',
+    backgroundColor: colors.accent,
     padding: 15,
     borderRadius: 10,
   },
   buttonText: {
     textAlign: 'center',
-    color: '#fff',
+    color: colors.white,
     fontWeight: 'bold',
   },
 });

@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { colors } from './colors';
 
 export const chatStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.background,
     padding: 10,
   },
   messageContainer: {
@@ -13,15 +14,15 @@ export const chatStyles = StyleSheet.create({
     maxWidth: '70%',
   },
   myMessage: {
-    backgroundColor: '#4ecdc4',
+    backgroundColor: colors.secondary, // 🟢
     alignSelf: 'flex-end',
   },
   otherMessage: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     alignSelf: 'flex-start',
   },
   text: {
-    color: '#000',
+    color: colors.text,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -29,19 +30,19 @@ export const chatStyles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     padding: 10,
     borderRadius: 10,
     marginRight: 10,
   },
   button: {
-    backgroundColor: '#ff6b6b',
+    backgroundColor: colors.primary,
     paddingHorizontal: 15,
     justifyContent: 'center',
     borderRadius: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.white,
     fontWeight: 'bold',
   },
 });

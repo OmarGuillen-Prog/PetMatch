@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
+import { colors } from './colors';
 
 export const profileStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.background,
   },
   header: {
     alignItems: 'center',
@@ -19,24 +20,25 @@ export const profileStyles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: colors.text,
   },
   email: {
-    color: '#666',
+    color: colors.gray,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: colors.text,
   },
   button: {
-    backgroundColor: '#ff6b6b',
+    backgroundColor: colors.accent,
     padding: 15,
     borderRadius: 10,
-    marginTop: 20,
   },
   buttonText: {
     textAlign: 'center',
-    color: '#fff',
+    color: colors.white,
     fontWeight: 'bold',
   },
 });
