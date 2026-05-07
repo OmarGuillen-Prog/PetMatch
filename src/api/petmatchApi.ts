@@ -13,7 +13,13 @@ export interface Mascota {
   usuario_id: number;
   vacunas: string[];
   imagen?: string;
+  imagenes?: { id?: number; url: string }[];
   creado_en?: string;
+  encargado?: {
+    id?: number;
+    nombre: string;
+    email?: string;
+  };
 }
 
 export interface Usuario {
@@ -201,16 +207,20 @@ export const UsuariosAPI = {
 // API de Adopciones
 export const AdopcionesAPI = {
   // Solicitar adopción
-  async solicitar(mascotaId: number, usuarioId: number, mensaje: string): Promise<void> {
-    const response = await fetch(`${BASE_URL}/adopciones`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ mascota_id: mascotaId, usuario_id: usuarioId, mensaje }),
-    });
-    if (!response.ok) {
-      throw new Error('Error al solicitar adopción');
+  async solicitar(mascotaId: number, usuarioId: number, mensaje?: string): Promise<void> {
+    try {
+      const response = await fetch(`${BASE_URL}/adopciones`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ mascota_id: mascotaId, usuario_id: usuarioId, mensaje }),
+      });
+      if (!response.ok) {
+        throw new Error('Error al solicitar adopción');
+      }
+    } catch (error) {
+      console.error('Error solicitando adopción:', error);
     }
   },
 
@@ -218,5 +228,100 @@ export const AdopcionesAPI = {
   async getMisSolicitudes(usuarioId: number): Promise<any[]> {
     const response = await fetch(`${BASE_URL}/adopciones/usuario/${usuarioId}`);
     return handleResponse<any[]>(response);
+  },
+};
+
+// API de Favoritos
+export const FavoritosAPI = {
+  // Verificar si una mascota es favorita
+  async isFavorito(mascotaId: number): Promise<boolean> {
+    try {
+      const response = await fetch(`${BASE_URL}/favoritos/check/${mascotaId}`);
+      const data = await handleResponse<{ esFavorito: boolean }>(response);
+      return data.esFavorito;
+    } catch (error) {
+      console.error('Error verificando favorito:', error);
+      return false;
+    }
+  },
+
+  // Agregar/quitar favorito
+  async toggle(mascota: Mascota): Promise<void> {
+    try {
+      const response = await fetch(`${BASE_URL}/favoritos/toggle`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ mascota_id: mascota.id }),
+      });
+      if (!response.ok) {
+        throw new Error('Error al actualizar favorito');
+      }
+    } catch (error) {
+      console.error('Error toggling favorito:', error);
+    }
+  },
+
+  // Obtener todos los favoritos del usuario
+  async getFavoritos(): Promise<Mascota[]> {
+    try {
+      const response = await fetch(`${BASE_URL}/favoritos`);
+      return handleResponse<Mascota[]>(response);
+    } catch (error) {
+      console.error('Error obteniendo favoritos:', error);
+      return [];
+    }
+  },
+};
+
+// API de Mensajes
+export const MensajesAPI = {
+  // Enviar mensaje
+  async enviar(
+    emisorId: number,
+    receptorId: number,
+    contenido: string
+  ): Promise<void> {
+    try {
+      const response = await fetch(`${BASE_URL}/mensajes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          emisor_id: emisorId,
+          receptor_id: receptorId,
+          contenido,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Error al enviar mensaje');
+      }
+    } catch (error) {
+      console.error('Error enviando mensaje:', error);
+    }
+  },
+
+  // Obtener conversación
+  async getConversacion(otroUsuarioId: number): Promise<any[]> {
+    try {
+      const response = await fetch(`${BASE_URL}/mensajes/conversacion/${otroUsuarioId}`);
+      return handleResponse<any[]>(response);
+    } catch (error) {
+      console.error('Error obteniendo conversación:', error);
+      return [];
+    }
+  },
+
+  // Obtener todas las conversaciones
+  async getConversaciones(): Promise<any[]> {
+    try {
+      const response = await fetch(`${BASE_URL}/mensajes/conversaciones`);
+      return handleResponse<any[]>(response);
+    } catch (error) {
+      console.error('Error obteniendo conversaciones:', error);
+      return [];
+    }
   },
 };
