@@ -19,28 +19,28 @@ export default function AppNavigator() {
       <Stack.Navigator>
 
         {/* Auth */}
-        <Stack.Screen 
-          name="Login" 
-          component={LoginScreen} 
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
           options={{ headerShown: false }}
         />
 
-        <Stack.Screen 
-          name="Register" 
-          component={RegisterScreen} 
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
         />
 
         {/* App principal */}
-        <Stack.Screen 
-          name="Main" 
-          component={TabNavigator} 
+        <Stack.Screen
+          name="Main"
+          component={TabNavigator}
           options={{ headerShown: false }}
         />
 
         {/* Detalle */}
-        <Stack.Screen 
-          name="Detail" 
-          component={DetailScreen} 
+        <Stack.Screen
+          name="Detail"
+          component={DetailScreen}
         />
 
       </Stack.Navigator>
