@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
 import { colors } from './colors';
-
 export const petCardStyles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,

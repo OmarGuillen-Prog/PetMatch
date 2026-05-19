@@ -1,17 +1,23 @@
 import { StyleSheet } from 'react-native';
-import { colors } from './colors';
+import { colors } from '../shared/colors';
 
-export const publishStyles = StyleSheet.create({
+export const loginStyles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     padding: 20,
     backgroundColor: colors.background,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 15,
-    color: colors.text,
+    textAlign: 'center',
+    color: colors.primary,
+  },
+  subtitle: {
+    textAlign: 'center',
+    marginBottom: 20,
+    color: colors.gray,
   },
   input: {
     backgroundColor: colors.white,
@@ -19,22 +25,20 @@ export const publishStyles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
-  textarea: {
-    backgroundColor: colors.white,
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 10,
-    height: 100,
-    textAlignVertical: 'top',
-  },
   button: {
     backgroundColor: colors.primary,
     padding: 15,
     borderRadius: 10,
+    marginTop: 10,
   },
   buttonText: {
-    textAlign: 'center',
     color: colors.white,
+    textAlign: 'center',
     fontWeight: 'bold',
+  },
+  link: {
+    marginTop: 15,
+    textAlign: 'center',
+    color: colors.secondary,
   },
 });

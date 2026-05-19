@@ -1,30 +1,37 @@
 import { StyleSheet } from 'react-native';
-import { colors } from './colors';
+import { colors } from '../shared/colors';
 
-export const detailStyles = StyleSheet.create({
+export const profileStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: colors.background,
   },
-  image: {
-    width: '100%',
-    height: 250,
-    borderRadius: 15,
+  header: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
   },
   name: {
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 15,
     color: colors.text,
   },
-  status: {
-    fontSize: 16,
+  email: {
     color: colors.gray,
-    marginTop: 5,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: colors.text,
   },
   button: {
-    marginTop: 20,
     backgroundColor: colors.accent,
     padding: 15,
     borderRadius: 10,

@@ -1,97 +1,88 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { login as loginService, register as registerService, logout as logoutService } from '../services/authService';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import {
+  login as loginService,
+  register as registerService,
+  logout as logoutService,
+  getUsuarioGuardado,
+  actualizarPerfil as actualizarPerfilService,
+} from '../services/authService';
+import { Usuario } from '../types';
 
 interface AuthContextType {
-  user: User | null;
+  usuario: Usuario | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  register: (nombre: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  actualizarPerfil: (datos: { nombre?: string; password?: string }) => Promise<void>;
+  refrescarUsuario: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        if (token) {
-          // Aquí fetch user from /auth/me si el backend lo soporta
-          setIsAuthenticated(true);
-          // Temporal: mock user
-          setUser({ id: '1', name: 'User', email: 'user@example.com' });
-        }
-      } catch (error) {
-        console.error('Auth check error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuth();
-  }, []);
+  const cargarUsuario = async () => {
+    try {
+      const saved = await getUsuarioGuardado();
+      if (saved) setUsuario(saved);
+    } catch (e) {
+      console.error('Error restaurando sesión:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { cargarUsuario(); }, []);
 
   const login = async (email: string, password: string) => {
     const data = await loginService(email, password);
-    setUser({ id: data.userId || '1', name: data.name || 'User', email });
-    setIsAuthenticated(true);
+    setUsuario(data);
   };
 
-  const register = async (email: string, password: string, name: string) => {
-    const data = await registerService(email, password, name);
-    setUser({ id: data.userId || '1', name, email });
-    setIsAuthenticated(true);
+  const register = async (nombre: string, email: string, password: string) => {
+    const data = await registerService(nombre, email, password);
+    setUsuario(data);
   };
 
   const logout = async () => {
     await logoutService();
-    setUser(null);
-    setIsAuthenticated(false);
+    setUsuario(null);
   };
 
-  const value = {
-    user,
-    isAuthenticated,
-    loading,
-    login,
-    register,
-    logout,
+  const actualizarPerfil = async (datos: { nombre?: string; password?: string }) => {
+    if (!usuario) throw new Error('No hay sesión activa');
+    const actualizado = await actualizarPerfilService(usuario.id, datos);
+    setUsuario(actualizado);
   };
+
+  const refrescarUsuario = async () => { await cargarUsuario(); };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{
+      usuario,
+      isAuthenticated: !!usuario,
+      isAdmin: usuario?.rol === 'ADMIN',
+      loading,
+      login,
+      register,
+      logout,
+      actualizarPerfil,
+      refrescarUsuario,
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth debe usarse dentro de AuthProvider');
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth debe usarse dentro de AuthProvider');
+  return ctx;
 };
-// </xai:function_call.
 
-
-
-
-// <xai:function_call name="edit_file">
-// <parameter name="path">c:/Users/sebas/Documents/GitHub/PetMatch/TODO.md
+export type { Usuario };

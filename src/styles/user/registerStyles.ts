@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors } from './colors';
+import { colors } from '../shared/colors';
 
 export const registerStyles = StyleSheet.create({
   container: {

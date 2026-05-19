@@ -27,10 +27,3 @@ export const useFetch = <T,>(fetchFn: () => Promise<T>): UseFetchState<T> => {
 
   return { data, loading, error, refetch };
 };
-</xai:function_call.
-
-
-
-
-<xai:function_call name="edit_file">
-<parameter name="path">c:/Users/sebas/Documents/GitHub/PetMatch/TODO.md
