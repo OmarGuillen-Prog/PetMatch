@@ -4,8 +4,9 @@ import {
   ScrollView, Switch, Modal, Alert, ActivityIndicator,
   Platform, KeyboardAvoidingView, Image,
 } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../../hooks/useAuth';
-import { crearMascota, crearImagen } from '../../services/petService';
+import { crearMascota, crearImagen, subirImagenArchivo } from '../../services/petService';
 
 const GREEN = '#4CAF50', GREEN_DARK = '#2e7d32', GREEN_LIGHT = '#e8f5e9';
 type EspecieType = 'Perro' | 'Gato' | 'Conejo' | 'Ave' | 'Hámster' | 'Otro';
@@ -21,6 +22,19 @@ export default function PublicarScreen({ navigation }: any) {
   const [urlImagen, setUrlImagen] = useState('');
   const [loading, setLoading] = useState(false);
   const [pickerVisible, setPickerVisible] = useState(false);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets[0].uri) {
+      setUrlImagen(result.assets[0].uri);
+    }
+  };
 
   const handlePublicar = async () => {
     if (!nombre.trim()) { Alert.alert('Campo requerido', 'Ingresa el nombre.'); return; }
@@ -42,7 +56,16 @@ export default function PublicarScreen({ navigation }: any) {
       });
 
       if (urlImagen.trim() && nueva?.id) {
-        try { await crearImagen(nueva.id, urlImagen.trim()); } catch { /* no bloquear */ }
+        try {
+          // Si es URI local (file://), subir al servidor
+          if (urlImagen.startsWith('file://')) {
+            const imagenSubida = await subirImagenArchivo(nueva.id, urlImagen.trim());
+            await crearImagen(nueva.id, imagenSubida.url);
+          } else {
+            // Si es URL externa, usar directamente
+            await crearImagen(nueva.id, urlImagen.trim());
+          }
+        } catch { /* no bloquear */ }
       }
 
       Alert.alert('🎉 ¡Publicado!', `${nombre} ya está visible en la app.`, [
@@ -68,9 +91,10 @@ export default function PublicarScreen({ navigation }: any) {
           <View style={{ width: 36 }} />
         </View>
 
-        <Text style={styles.label}>URL de imagen (opcional)</Text>
-        <TextInput style={styles.input} placeholder="https://..." placeholderTextColor="#bbb"
-          value={urlImagen} onChangeText={setUrlImagen} autoCapitalize="none" keyboardType="url" />
+        <Text style={styles.label}>Imagen (opcional)</Text>
+        <TouchableOpacity style={styles.galleryBtn} onPress={pickImage}>
+          <Text style={styles.galleryBtnText}>📷 Seleccionar de galería</Text>
+        </TouchableOpacity>
         {urlImagen.trim() ? (
           <Image source={{ uri: urlImagen.trim() }} style={styles.imagePreview} resizeMode="cover" />
         ) : (
@@ -143,6 +167,8 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 17, fontWeight: '800', color: '#1a1a1a' },
   label: { fontSize: 13, fontWeight: '700', color: '#444', marginTop: 16, marginBottom: 6 },
   input: { backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: '#ddd', paddingHorizontal: 14, paddingVertical: 12, fontSize: 15, color: '#222', marginBottom: 4 },
+  galleryBtn: { backgroundColor: '#4A90E2', borderRadius: 12, paddingVertical: 12, alignItems: 'center', marginBottom: 4 },
+  galleryBtnText: { color: '#fff', fontSize: 14, fontWeight: '700' },
   textArea: { height: 110, textAlignVertical: 'top' },
   imagePreview: { width: '100%', height: 200, borderRadius: 14, marginBottom: 4, borderWidth: 1, borderColor: '#ddd' },
   imagePlaceholder: { width: '100%', height: 140, borderRadius: 14, marginBottom: 4, backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#ddd', borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center' },

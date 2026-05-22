@@ -29,12 +29,15 @@ export default function ChatScreen({ route }: any) {
   const { usuario } = useAuth();
   const otroUsuarioId: number = route?.params?.otroUsuarioId ?? 0;
   const otroUsuarioNombre: string = route?.params?.otroUsuarioNombre ?? 'Chat';
+  console.log('ChatScreen params:', { otroUsuarioId, otroUsuarioNombre });
 
   const [mensajes, setMensajes] = useState<MsgUI[]>([]);
   const [texto, setTexto] = useState('');
   const [conectado, setConectado] = useState(false);
   const [cargando, setCargando] = useState(true);
   const [enviando, setEnviando] = useState(false);
+  const [reconectando, setReconectando] = useState(false);
+  const [errorWs, setErrorWs] = useState<string | null>(null);
   const flatListRef = useRef<FlatList>(null);
 
   const cargarHistorial = useCallback(async () => {
@@ -42,6 +45,7 @@ export default function ChatScreen({ route }: any) {
     try {
       const hist = await getConversacion(usuario.id, otroUsuarioId);
       setMensajes(hist.map((m) => toUI(m, usuario.id)));
+      setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
     } catch { /* silencioso */ }
     finally { setCargando(false); }
   }, [usuario, otroUsuarioId]);
@@ -52,14 +56,29 @@ export default function ChatScreen({ route }: any) {
 
     // Conectar STOMP con el nombre del usuario como sender
     stompChat.connect(usuario.nombre);
-    stompChat.onOpen(() => setConectado(true));
-    stompChat.onClose(() => setConectado(false));
+    stompChat.onOpen(() => {
+      console.log('[ChatScreen] onOpen ejecutado - conectado');
+      setConectado(true);
+      setReconectando(false);
+      setErrorWs(null);
+    });
+    stompChat.onClose(() => {
+      setConectado(false);
+      setReconectando(true);
+      setErrorWs('Conexión perdida. Reconectando...');
+    });
 
     stompChat.onMessage((msg: ChatMessage) => {
-      // Solo mensajes de esta conversación
+      // Filtrar: solo mostrar mensajes entre usuario actual y otro usuario
       const esMio = msg.sender === usuario.nombre;
-      const esDelOtro = msg.sender !== usuario.nombre;
-      if (!esMio && !esDelOtro) return;
+      const esDelOtro = msg.sender === otroUsuarioNombre;
+      const esParaMi = msg.receiver === usuario.nombre;
+      const esDelOtroParaMi = msg.receiver === otroUsuarioNombre;
+
+      // Solo aceptar mensajes donde yo soy sender o receiver, y el otro es el counterpart
+      if (!esMio && !esParaMi) return;
+      if (esMio && msg.receiver !== otroUsuarioNombre) return;
+      if (esParaMi && msg.sender !== otroUsuarioNombre) return;
 
       const ui: MsgUI = {
         key: `ws-${Date.now()}-${Math.random()}`,
@@ -83,6 +102,19 @@ export default function ChatScreen({ route }: any) {
     }
   }, [cargando]);
 
+  // Polling REST para refrescar mensajes cada 3 segundos
+  useEffect(() => {
+    if (!usuario || !otroUsuarioId) return;
+    const interval = setInterval(async () => {
+      try {
+        const hist = await getConversacion(usuario.id, otroUsuarioId);
+        setMensajes(hist.map((m) => toUI(m, usuario.id)));
+        setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
+      } catch { /* silencioso */ }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [usuario, otroUsuarioId]);
+
   const enviar = async () => {
     if (!texto.trim() || !usuario || enviando) return;
     const contenido = texto.trim();
@@ -100,7 +132,7 @@ export default function ChatScreen({ route }: any) {
     setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
 
     try {
-      // STOMP (tiempo real) — usa nombre de usuario como sender/receiver
+      // STOMP (tiempo real) — usa nombres como sender/receiver (backend espera nombres)
       stompChat.send(usuario.nombre, otroUsuarioNombre, contenido);
       // REST (persistencia) — usa IDs numéricos
       await enviarMensajeREST(usuario.id, otroUsuarioId, contenido);
@@ -128,9 +160,12 @@ export default function ChatScreen({ route }: any) {
             <View style={styles.statusRow}>
               <View style={[styles.dot, { backgroundColor: conectado ? '#4CAF50' : '#bbb' }]} />
               <Text style={[styles.statusText, { color: conectado ? '#4CAF50' : '#bbb' }]}>
-                {conectado ? 'En línea' : 'Desconectado'}
+                {reconectando ? 'Reconectando...' : conectado ? 'En línea' : 'Desconectado'}
               </Text>
             </View>
+            {errorWs && (
+              <Text style={styles.errorText}>{errorWs}</Text>
+            )}
           </View>
         </View>
 
@@ -209,6 +244,7 @@ const styles = StyleSheet.create({
   statusRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 },
   dot: { width: 7, height: 7, borderRadius: 4 },
   statusText: { fontSize: 11, fontWeight: '600' },
+  errorText: { fontSize: 10, color: '#e57373', marginTop: 2 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 60 },
   cargandoText: { color: '#aaa', marginTop: 10, fontSize: 13 },
   emptyText: { fontSize: 14, color: '#aaa' },

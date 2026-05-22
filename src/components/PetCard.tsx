@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { petCardStyles as styles } from '../styles/petCardStyles';
+import { petCardStyles as styles } from '../styles/shared/petCardStyles';
 
 type Props = {
   nombre: string;
