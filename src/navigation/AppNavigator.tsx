@@ -16,6 +16,8 @@ import AdminNavigator from './admin/AdminNavigator';
 // Pantallas extra
 import DetailScreen from '../screens/user/DetailScreen';
 import ChatScreen from '../screens/user/ChatScreen';
+import AdopcionDetailScreen from '../screens/user/AdopcionDetailScreen';
+import MisSolicitudesScreen from '../screens/user/MisSolicitudesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +66,16 @@ export default function AppNavigator() {
                 headerShown: true,
                 title: route.params?.otroUsuarioNombre ?? 'Chat',
               })}
+            />
+            <Stack.Screen
+              name="AdopcionDetail"
+              component={AdopcionDetailScreen}
+              options={{ headerShown: true, title: 'Detalle de Solicitud' }}
+            />
+            <Stack.Screen
+              name="MisSolicitudes"
+              component={MisSolicitudesScreen}
+              options={{ headerShown: true, title: 'Solicitudes de mis mascotas' }}
             />
           </>
         )}

@@ -145,9 +145,12 @@ export const crearAdopcion = async (
 
 export const actualizarAdopcion = async (
   id: number,
-  estado: string
+  estado: string,
+  usuarioId?: number
 ): Promise<Adopcion> => {
-  const res = await api.put<ApiResponse<Adopcion>>(`/api/v1/adopcion/${id}`, { estado });
+  const body: any = { estado };
+  if (usuarioId) body.usuarioId = usuarioId;
+  const res = await api.put<ApiResponse<Adopcion>>(`/api/v1/adopcion/${id}`, body);
   return unwrap(res.data);
 };
 

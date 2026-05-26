@@ -84,9 +84,6 @@ export default function AdminDashboard() {
                         {/* id es el campo correcto del backend */}
                         <Text style={styles.recentId}>Solicitud #{a.id}</Text>
                         <Text style={styles.recentSub}>Usuario #{a.usuarioId} · Mascota #{a.mascotaId}</Text>
-                        <Text style={styles.recentDate}>
-                          {new Date(a.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        </Text>
                       </View>
                       <View style={[styles.badge, { backgroundColor: color + '22' }]}>
                         <Text style={{ fontSize: 11, fontWeight: '700', color }}>{a.estado}</Text>

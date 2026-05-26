@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../hooks/useAuth';
 import { stompChat, getConversacion, enviarMensajeREST } from '../../services/mensajeService';
 import { ChatMessage, Mensaje } from '../../types';
+import { colors } from '../../styles/shared/colors';
 
 // Mensaje unificado para la UI
 interface MsgUI {
@@ -17,11 +18,12 @@ interface MsgUI {
 }
 
 function toUI(m: Mensaje, miId: number): MsgUI {
+  const fecha = new Date(Date.now());
   return {
     key: String(m.id),
     contenido: m.contenido,
     esMio: m.emisorId === miId,
-    hora: new Date(m.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    hora: fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
   };
 }
 
@@ -80,13 +82,12 @@ export default function ChatScreen({ route }: any) {
       if (esMio && msg.receiver !== otroUsuarioNombre) return;
       if (esParaMi && msg.sender !== otroUsuarioNombre) return;
 
+      const fecha = new Date(Date.now());
       const ui: MsgUI = {
         key: `ws-${Date.now()}-${Math.random()}`,
         contenido: msg.content,
         esMio,
-        hora: msg.timestamp
-          ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        hora: fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
       setMensajes((prev) => [...prev, ui]);
@@ -109,7 +110,6 @@ export default function ChatScreen({ route }: any) {
       try {
         const hist = await getConversacion(usuario.id, otroUsuarioId);
         setMensajes(hist.map((m) => toUI(m, usuario.id)));
-        setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
       } catch { /* silencioso */ }
     }, 3000);
     return () => clearInterval(interval);
@@ -122,11 +122,12 @@ export default function ChatScreen({ route }: any) {
     setEnviando(true);
 
     // Optimista
+    const fecha = new Date(Date.now());
     const optimista: MsgUI = {
       key: `opt-${Date.now()}`,
       contenido,
       esMio: true,
-      hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      hora: fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
     setMensajes((prev) => [...prev, optimista]);
     setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
@@ -144,7 +145,7 @@ export default function ChatScreen({ route }: any) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f7fa' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -192,9 +193,6 @@ export default function ChatScreen({ route }: any) {
               <View style={[styles.bubble, item.esMio ? styles.bubbleMio : styles.bubbleOtro]}>
                 <Text style={[styles.bubbleText, item.esMio && { color: '#fff' }]}>
                   {item.contenido}
-                </Text>
-                <Text style={[styles.bubbleTime, { color: item.esMio ? 'rgba(255,255,255,0.65)' : '#bbb' }]}>
-                  {item.hora}
                 </Text>
               </View>
             )}
@@ -253,7 +251,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14, paddingVertical: 10, marginBottom: 8,
   },
   bubbleMio: {
-    backgroundColor: '#4A90E2', alignSelf: 'flex-end', borderBottomRightRadius: 4,
+    backgroundColor: colors.primary, alignSelf: 'flex-end', borderBottomRightRadius: 4,
   },
   bubbleOtro: {
     backgroundColor: '#fff', alignSelf: 'flex-start', borderBottomLeftRadius: 4,
@@ -273,7 +271,7 @@ const styles = StyleSheet.create({
   },
   sendBtn: {
     width: 44, height: 44, borderRadius: 22,
-    backgroundColor: '#4A90E2', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center',
   },
   sendBtnOff: { backgroundColor: '#c5d8f0' },
   sendIcon: { color: '#fff', fontSize: 16, fontWeight: '700' },

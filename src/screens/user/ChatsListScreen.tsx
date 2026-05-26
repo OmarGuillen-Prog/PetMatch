@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { getMensajes } from '../../services/mensajeService';
 import { getUsuarios } from '../../services/usuarioService';
 import { Mensaje } from '../../types';
+import { colors } from '../../styles/shared/colors';
 
 type Conversacion = {
   otroUsuarioId: number;
@@ -32,6 +33,7 @@ export default function ChatsListScreen({ navigation }: any) {
         const esMio = msg.emisorId === usuario.id;
         const otroId = esMio ? msg.receptorId : msg.emisorId;
         const otroNombre = mapaUsuarios.get(otroId) || `Usuario ${otroId}`;
+        console.log('Fecha del mensaje:', msg.fecha, 'Tipo:', typeof msg.fecha);
 
         if (!mapa.has(otroId)) {
           mapa.set(otroId, {
@@ -102,9 +104,6 @@ export default function ChatsListScreen({ navigation }: any) {
                 <Text style={styles.nombre}>{item.otroUsuarioNombre}</Text>
                 <Text style={styles.mensaje} numberOfLines={1}>{item.ultimoMensaje}</Text>
               </View>
-              <Text style={styles.fecha}>
-                {new Date(item.fecha).toLocaleDateString()}
-              </Text>
             </TouchableOpacity>
           )}
         />
@@ -114,7 +113,7 @@ export default function ChatsListScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f7fa', padding: 16 },
+  container: { flex: 1, backgroundColor: colors.background, padding: 16 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   header: { fontSize: 24, fontWeight: '800', color: '#1a1a1a', marginBottom: 20 },
   empty: { fontSize: 16, color: '#999' },

@@ -8,6 +8,7 @@ import PetCard from '../../components/PetCard';
 import { getMascotas } from '../../services/petService';
 import { getImagenesByMascota } from '../../services/petService';
 import { Mascota } from '../../types';
+import { colors } from '../../styles/shared/colors';
 
 export default function HomeScreen({ navigation }: any) {
   const [mascotas, setMascotas] = useState<Mascota[]>([]);
@@ -48,14 +49,20 @@ export default function HomeScreen({ navigation }: any) {
     if (!busqueda.trim()) {
       setFiltradas(mascotas);
     } else {
-      const q = busqueda.toLowerCase();
+      const q = busqueda.toLowerCase().trim();
       setFiltradas(
-        mascotas.filter(
-          (m) =>
-            m.nombre.toLowerCase().includes(q) ||
-            m.tipo.toLowerCase().includes(q) ||
-            m.estado.toLowerCase().includes(q)
-        )
+        mascotas.filter((m) => {
+          const nombre = (m.nombre || '').toLowerCase();
+          const tipo = (m.tipo || '').toLowerCase();
+          const estado = (m.estado || '').toLowerCase();
+          const descripcion = (m.descripcion || '').toLowerCase();
+          return (
+            nombre.includes(q) ||
+            tipo.includes(q) ||
+            estado.includes(q) ||
+            descripcion.includes(q)
+          );
+        })
       );
     }
   }, [busqueda, mascotas]);
@@ -80,9 +87,13 @@ export default function HomeScreen({ navigation }: any) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f7fa' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={styles.container}>
         <Text style={styles.title}>🐾 Mascotas disponibles</Text>
+
+        <View style={styles.banner}>
+          <Text style={styles.bannerText}>❤️ ¡Adopta y cambia una vida!</Text>
+        </View>
 
         <TextInput
           style={styles.search}
@@ -117,9 +128,17 @@ export default function HomeScreen({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
-  title: { fontSize: 22, fontWeight: '800', color: '#1a1a1a', marginBottom: 12 },
+  title: { fontSize: 22, fontWeight: '800', color: colors.text, marginBottom: 12 },
+  banner: {
+    backgroundColor: colors.secondary,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    alignItems: 'center',
+  },
+  bannerText: { fontSize: 14, fontWeight: '700', color: '#fff' },
   search: {
-    backgroundColor: '#fff', borderRadius: 10, paddingHorizontal: 14,
+    backgroundColor: colors.white, borderRadius: 10, paddingHorizontal: 14,
     paddingVertical: 10, marginBottom: 12, fontSize: 14,
     borderWidth: 1, borderColor: '#ddd',
   },

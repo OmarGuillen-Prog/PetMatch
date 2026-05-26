@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../hooks/useAuth';
 import { getMascotas, getMisAdopciones } from '../../services/petService';
 import { Mascota, Adopcion } from '../../types';
+import { colors } from '../../styles/shared/colors';
 
 type Tab = 'mascotas' | 'adopciones';
 
@@ -14,6 +15,7 @@ const adopcionColor: Record<string, { bg: string; text: string }> = {
   PENDIENTE: { bg: '#fff3e0', text: '#e65100' },
   APROBADA:  { bg: '#e8f5e9', text: '#2e7d32' },
   RECHAZADA: { bg: '#fce4ec', text: '#c62828' },
+  CANCELADA: { bg: '#f5f5f5', text: '#888' },
 };
 
 export default function ProfileScreen({ navigation }: any) {
@@ -73,7 +75,7 @@ export default function ProfileScreen({ navigation }: any) {
   if (!usuario) return null;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f7fa' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView contentContainerStyle={styles.scroll}>
 
         {/* Tarjeta perfil */}
@@ -90,6 +92,13 @@ export default function ProfileScreen({ navigation }: any) {
             <Text style={styles.editBtnText}>✏️ Editar perfil</Text>
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity
+          style={styles.solicitudesBtn}
+          onPress={() => navigation.navigate('MisSolicitudes')}
+        >
+          <Text style={styles.solicitudesBtnText}>📋 Ver solicitudes de adopción de mis mascotas</Text>
+        </TouchableOpacity>
 
         {/* Tabs */}
         <View style={styles.tabs}>
@@ -140,18 +149,19 @@ export default function ProfileScreen({ navigation }: any) {
             misAdopciones.map((item) => {
               const cfg = adopcionColor[item.estado] ?? { bg: '#f5f5f5', text: '#888' };
               return (
-                <View key={item.id} style={styles.itemCard}>
+                <TouchableOpacity key={item.id} style={styles.itemCard}
+                  onPress={() => navigation.navigate('AdopcionDetail', { adopcion: item })}>
                   <View style={styles.itemIcon}><Text style={{ fontSize: 22 }}>🏠</Text></View>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.itemNombre}>Solicitud #{item.id}</Text>
                     <Text style={styles.itemSub}>
-                      Mascota #{item.mascotaId} · {new Date(item.fecha).toLocaleDateString('es-ES')}
+                      Mascota #{item.mascotaId}
                     </Text>
                   </View>
                   <View style={[styles.estadoBadge, { backgroundColor: cfg.bg }]}>
                     <Text style={{ fontSize: 11, fontWeight: '700', color: cfg.text }}>{item.estado}</Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             })
           )
@@ -208,6 +218,15 @@ const styles = StyleSheet.create({
   tabActive: { backgroundColor: '#4A90E2' },
   tabText: { fontSize: 12, fontWeight: '700', color: '#888' },
   tabTextActive: { color: '#fff' },
+  solicitudesBtn: {
+    backgroundColor: colors.secondary,
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 12,
+    marginBottom: 16,
+  },
+  solicitudesBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
   emptyBox: { alignItems: 'center', paddingVertical: 40 },
   emptyIcon: { fontSize: 40, marginBottom: 10 },
   emptyText: { fontSize: 14, color: '#aaa', textAlign: 'center' },

@@ -5,8 +5,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../hooks/useAuth';
-import { crearAdopcion } from '../../services/petService';
+import { crearAdopcion, eliminarMascota } from '../../services/petService';
 import { Mascota } from '../../types';
+import { colors } from '../../styles/shared/colors';
 
 export default function DetailScreen({ route, navigation }: any) {
   const { mascota }: { mascota: Mascota } = route.params;
@@ -17,6 +18,8 @@ export default function DetailScreen({ route, navigation }: any) {
   const imagenUrl = mascota.imagenes?.[0]?.url ?? '';
   // usuarioId en el backend es el campo correcto
   const esPropio = usuario?.id === mascota.usuarioId;
+  const esAdmin = usuario?.rol === 'ADMIN';
+  const puedeEliminar = esPropio || esAdmin;
   const disponible = (mascota.estado ?? '').toLowerCase() === 'disponible';
 
   const handleAdopcion = async () => {
@@ -48,8 +51,34 @@ export default function DetailScreen({ route, navigation }: any) {
     );
   };
 
+  const handleEliminar = async () => {
+    Alert.alert(
+      'Eliminar mascota',
+      '¿Estás seguro de que deseas eliminar esta mascota? Esta acción no se puede deshacer.',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            setLoading(true);
+            try {
+              await eliminarMascota(mascota.id);
+              Alert.alert('✅ Mascota eliminada');
+              navigation.goBack();
+            } catch (e: any) {
+              Alert.alert('Error', e.message || 'No se pudo eliminar la mascota');
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
         <View style={styles.container}>
           {imagenUrl ? (
@@ -85,6 +114,19 @@ export default function DetailScreen({ route, navigation }: any) {
           )}
 
           <View style={{ marginTop: 24 }}>
+            {puedeEliminar && (
+              <TouchableOpacity
+                style={[styles.deleteBtn, loading && { opacity: 0.7 }]}
+                onPress={handleEliminar}
+                disabled={loading}
+              >
+                {loading
+                  ? <ActivityIndicator color="#fff" />
+                  : <Text style={styles.deleteBtnText}>🗑️ Eliminar mascota</Text>
+                }
+              </TouchableOpacity>
+            )}
+
             {esPropio ? (
               <View style={styles.ownBadge}>
                 <Text style={styles.ownBadgeText}>📌 Esta es tu publicación</Text>
@@ -141,10 +183,15 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 15, fontWeight: '700', color: '#333', marginBottom: 6 },
   desc: { fontSize: 14, color: '#555', lineHeight: 22 },
   btn: {
-    backgroundColor: '#FF8A00', borderRadius: 14, paddingVertical: 14,
+    backgroundColor: colors.accent, borderRadius: 14, paddingVertical: 14,
     alignItems: 'center',
   },
   btnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
+  deleteBtn: {
+    backgroundColor: '#e57373', borderRadius: 14, paddingVertical: 14,
+    alignItems: 'center', marginBottom: 12,
+  },
+  deleteBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
   ownBadge: {
     backgroundColor: '#fff3e0', borderRadius: 12, padding: 14,
     alignItems: 'center', borderWidth: 1, borderColor: '#FF8A00',

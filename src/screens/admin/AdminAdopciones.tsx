@@ -91,9 +91,6 @@ export default function AdminAdopciones() {
                     {/* usuarioId y mascotaId son los campos correctos del backend */}
                     <Text style={styles.infoText}>👤 Usuario #{item.usuarioId}</Text>
                     <Text style={styles.infoText}>🐾 Mascota #{item.mascotaId}</Text>
-                    <Text style={styles.infoText}>
-                      📅 {new Date(item.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
-                    </Text>
                   </View>
 
                   {item.estado === 'PENDIENTE' && (
