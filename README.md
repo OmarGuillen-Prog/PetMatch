@@ -125,15 +125,6 @@ export const BASE_URL = 'https://tu-api-url.com';
 
 ==================================================================================
 
-Autenticación
-La aplicación utiliza JWT (JSON Web Tokens) para la autenticación:
-
-Los tokens se almacenan localmente usando AsyncStorage
-Cada request incluye el token en el header Authorization: Bearer {token}
-El contexto de autenticación (useAuth) maneja el estado global de la sesión
-
-==================================================================================
-
 🎨 Scripts Disponibles
 bash
 npm start          # Inicia el servidor de desarrollo de Expo
